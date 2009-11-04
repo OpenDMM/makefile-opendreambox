@@ -1,11 +1,14 @@
 #!/usr/bin/make -f
+#
+#  Makefile-opendreambox v0.4.0 (2009-11-04)
+#
 
 # target platform: dm500plus, dm600pvr, dm7020, dm7025, dm800, dm8000
 MACHINE = dm8000
 
 # for a list of some other repositories have
 # a look at http://git.opendreambox.org/
-GIT_URL = git://git.openembedded.net/openembedded
+GIT_URL = git://git.opendreambox.org/git/openembedded
 
 # in case you want to send pull requests or generate patches
 #GIT_AUTHOR_NAME ?= Your Name
@@ -17,12 +20,11 @@ GIT_URL = git://git.openembedded.net/openembedded
 #UPGRADE_FROM_MONOTONE=1
 
 # you should not need to change anything below
-BB_VERSION = 1.4.2
-SVN = svn
-SVN_BITBAKE_PARENT = "svn://svn.berlios.de/bitbake/"
+BB_URL = git://git.opendreambox.org/git/bitbake
+BB_VERSION = 1.4.2-git
 
 GIT = git
-GIT_BRANCH = org.openembedded.dreambox
+GIT_BRANCH = opendreambox-1.5
 
 PWD := $(shell pwd)
 
@@ -41,10 +43,15 @@ all: initialize
 	@echo "  - go into $(MACHINE)/build/, source env.source and start on your own!"
 	@echo 
 
-bb:
-	$(SVN) checkout $(SVN_BITBAKE_PARENT)/tags/bitbake-$(BB_VERSION) bb
+bb: bb/.git
 
-
+bb/.git:
+	$(GIT) clone -n $(BB_URL) bb
+	cd bb && ( \
+		if [ -n "$(GIT_AUTHOR_EMAIL)" ]; then git config user.email "$(GIT_AUTHOR_EMAIL)"; fi; \
+		if [ -n "$(GIT_AUTHOR_NAME)" ]; then git config user.name "$(GIT_AUTHOR_NAME)"; fi; \
+		$(GIT) checkout -b local-$(BB_VERSION) -f $(BB_VERSION); \
+	)
 
 .PHONY: image initialize openembedded-update openembedded-update-all
 
