@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 #
-#  Makefile-opendreambox v0.4.0 (2009-11-04)
+#  Makefile-opendreambox v0.4.1 (2009-11-20)
 #
 
 # target platform: dm500plus, dm600pvr, dm7020, dm7025, dm800, dm8000
@@ -54,9 +54,12 @@ bb/.git:
 		$(GIT) checkout -f $(BB_BRANCH) \
 	)
 
-.PHONY: image initialize openembedded-update openembedded-update-all
+bb-update: bb/.git
+	cd bb && $(GIT) pull origin $(BB_BRANCH)
 
-image: initialize openembedded-update
+.PHONY: bb-update image initialize openembedded-update openembedded-update-all
+
+image: bb-update initialize openembedded-update
 	cd $(OE_BASE)/build; . ./env.source; bitbake dreambox-image
 
 initialize: $(OE_BASE)/cache sources $(OE_BASE)/build $(OE_BASE)/build/conf \
