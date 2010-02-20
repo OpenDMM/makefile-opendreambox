@@ -1,9 +1,9 @@
 #!/usr/bin/make -f
 #
-#  Makefile-opendreambox v0.4.2 (2009-11-20)
+#  Makefile-opendreambox v0.4.3 (2010-02-19)
 #
 
-# target platform: dm500plus, dm600pvr, dm7020, dm7025, dm800, dm8000
+# target platform: dm500hd, dm500plus, dm600pvr, dm7020, dm7025, dm800, dm8000
 MACHINE = dm8000
 
 # for a list of some other repositories have
@@ -35,13 +35,13 @@ OE_BASE = $(PWD)/$(MACHINE)
 endif
 
 all: initialize
-	@echo 
+	@echo
 	@echo "Openembedded for the Dreambox environment has been initialized"
 	@echo "properly. Now you can either:"
 	@echo
 	@echo "  - make the 'image'-target to build an image, or"
 	@echo "  - go into $(MACHINE)/build/, source env.source and start on your own!"
-	@echo 
+	@echo
 
 bb: bb/.git
 
@@ -64,7 +64,7 @@ bb-update: bb/.git
 .PHONY: bb-update image initialize openembedded-update openembedded-update-all
 
 image: bb-update initialize openembedded-update
-	cd $(OE_BASE)/build; . ./env.source; bitbake dreambox-image
+	cd $(OE_BASE)/build; . ./env.source; bitbake -k dreambox-image
 
 initialize: $(OE_BASE)/cache sources $(OE_BASE)/build $(OE_BASE)/build/conf \
 	$(OE_BASE)/build/tmp $(OE_BASE)/openembedded $(OE_BASE)/build/conf/local.conf \
