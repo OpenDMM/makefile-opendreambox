@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 #
-#  Makefile-opendreambox v0.4.3 (2010-02-19)
+#  Makefile-opendreambox v0.4.4 (2010-02-20)
 #
 
 # target platform: dm500hd, dm500plus, dm600pvr, dm7020, dm7025, dm800, dm8000
@@ -17,6 +17,11 @@ GIT_URL = git://git.opendreambox.org/git/openembedded
 # set this to the number of CPU cores to use for parallel build
 NUM_THREADS = 1
 
+# uncomment this if you're upgrading an installation
+# from monotone. this changes the directory layout
+# to the old version without shared directories.
+#UPGRADE_FROM_MONOTONE=1
+
 # you should not need to change anything below
 BB_URL = git://git.opendreambox.org/git/bitbake
 BB_BRANCH = 1.8-dream
@@ -26,7 +31,17 @@ GIT_BRANCH = opendreambox
 
 PWD := $(shell pwd)
 
+ifeq ($(UPGRADE_FROM_MONOTONE),1)
+OE_BASE = $(PWD)
+else
 OE_BASE = $(PWD)/$(MACHINE)
+endif
+
+ifeq ($(findstring $(MACHINE),dm500plus dm600pvr dm7020),$(MACHINE))
+ARCH = powerpc
+else
+ARCH = mipsel
+endif
 
 all: initialize
 	@echo
@@ -96,7 +111,7 @@ $(OE_BASE)/build/conf/local.conf:
 $(OE_BASE)/build/env.source:
 	echo 'OE_BASE=$(OE_BASE)' > $@
 	echo 'export BBPATH="$${OE_BASE}/openembedded/:$(PWD)/bb/:$${OE_BASE}/build/"' >> $@
-	echo 'PATH=$${PATH}:$(PWD)/bb/bin:$${OE_BASE}/build/tmp/cross/bin' >> $@
+	echo 'PATH=$(PWD)/bb/bin:$${OE_BASE}/build/tmp/cross/$(ARCH)/bin:$${PATH}' >> $@
 	echo 'export PATH' >> $@
 	echo 'export LD_LIBRARY_PATH=' >> $@
 	echo 'export LANG=C' >> $@
@@ -105,6 +120,7 @@ $(OE_BASE)/build/env.source:
 $(OE_BASE)/openembedded: $(OE_BASE)/openembedded/.git
 
 $(OE_BASE)/openembedded/.git:
+	@if [ -d $(OE_BASE)/openembedded/_MTN ]; then echo "Please remove your old monotone repository from $(OE_BASE)/openembedded!"; exit 1; fi
 	$(GIT) clone -n $(GIT_URL) $(OE_BASE)/openembedded
 	cd $(OE_BASE)/openembedded && ( \
 		if [ -n "$(GIT_AUTHOR_EMAIL)" ]; then git config user.email "$(GIT_AUTHOR_EMAIL)"; fi; \
