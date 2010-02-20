@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 #
-#  Makefile-opendreambox v0.4.4 (2010-02-20)
+#  Makefile-opendreambox v0.4.5 (2010-02-20)
 #
 
 # target platform: dm500hd, dm500plus, dm600pvr, dm7020, dm7025, dm800, dm8000
@@ -99,7 +99,7 @@ $(OE_BASE)/build/conf/local.conf:
 	echo 'PREFERRED_PROVIDERS += " virtual/$${TARGET_PREFIX}g++:gcc-cross"' >> $@
 	echo 'MACHINE = "$(MACHINE)"' >> $@
 	echo 'TARGET_OS = "linux"' >> $@
-	echo 'DISTRO = "opendreambox-1.5"' >> $@
+	echo 'DISTRO = "$(GIT_BRANCH)"' >> $@
 	echo 'CACHE = "$(OE_BASE)/cache/oe-cache.$${USER}"' >> $@
 
 $(OE_BASE)/build/env.source:
