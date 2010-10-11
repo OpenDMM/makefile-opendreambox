@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 #
-#  Makefile-opendreambox v0.4.6 (2010-02-20)
+#  Makefile-opendreambox v0.4.7 (2010-10-11)
 #
 
 # Note: You can override all variables by storing them
@@ -31,8 +31,8 @@ NUM_THREADS ?= 1
 #UPGRADE_FROM_MONOTONE ?= 1
 
 # you should not need to change anything below
-BB_URL = git://git.opendreambox.org/git/bitbake
-BB_BRANCH = 1.8-dream
+BB_URL ?= git://git.opendreambox.org/git/bitbake
+BB_BRANCH ?= 1.8-dream
 
 GIT = git
 GIT_BRANCH = opendreambox
